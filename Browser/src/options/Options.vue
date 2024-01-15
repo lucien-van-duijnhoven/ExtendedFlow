@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { storageDemo } from '~/logic/storage'
+import { ref } from 'vue';
+
+async function getStorageData() {
+  const storage = await browser.storage.local.get("sites");
+  storagePrint.value = storage.sites;
+}
+
+const storagePrint = ref("");
+
 </script>
 
 <template>
@@ -13,5 +22,8 @@ import { storageDemo } from '~/logic/storage'
     <div class="mt-4">
       Powered by Vite <pixelarticons-zap class="align-middle inline-block" />
     </div>
+
+    <div class="border">{{ storagePrint }}</div>
+    <button @click="getStorageData()">get local storage</button>
   </main>
 </template>
