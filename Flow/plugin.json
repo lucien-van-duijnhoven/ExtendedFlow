@@ -1,8 +1,8 @@
 {
   "ID": "890a6a95-5d36-4fab-bce1-b4c3f1239098",
   "ActionKeyword": "npm",
-  "Name": "Search NPM",
-  "Description": "Search NPM packages",
+  "Name": "Extended Flow",
+  "Description": "Browser controll from flow",
   "Author": "Joël Kuijper",
   "Version": "0.0.2",
   "Language": "TypeScript",

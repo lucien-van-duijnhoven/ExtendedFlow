@@ -1,35 +1,47 @@
-import open from "open";
 import { Flow } from "./lib/flow";
-import { z } from "zod";
 
 // The events are the custom events that you define in the flow.on() method.
-const events = ["search"] as const;
+const events = ["grayscale", "block"] as const;
 type Events = (typeof events)[number];
 
 const flow = new Flow<Events>("assets/npm.png");
 
-flow.on("query", (params) => {
-	const [query] = z.array(z.string()).parse(params);
+flow.on("grayscale", async () => {
+	const res = await fetch("http://localhost:4000/grayscale");
+	if (res.ok) {
+		const json = await res.json();
+	} else {
+		flow.showResult({
+			title: `Error`,
+			subtitle: `Something went wrong`,
+		});
+	}
+});
 
-	const qp = new URLSearchParams({
-		q: query,
-	});
+flow.on("block", async () => {
+	const res = await fetch("http://localhost:4000/block");
+	if (res.ok) {
+		const json = await res.json();
+	} else {
+		flow.showResult({
+			title: `Error`,
+			subtitle: `Something went wrong`,
+		});
+	}
+});
 
-	const url = `https://www.npmjs.com/search?${qp}`;
-
+function showToggleOptions() {
 	flow.showResult({
-		title: `Search NPM package: ${query}`,
-		subtitle: url,
-		method: "search",
-		parameters: [url, "hello"],
+		title: `Toggle grayscale`,
+		method: "grayscale",
 		dontHideAfterAction: true,
 	});
-});
 
-flow.on("search", (params) => {
-	const [url] = z.array(z.string().url()).parse(params);
-
-	open(url);
-});
+	flow.showResult({
+		title: `Toggle block`,
+		method: "block",
+		dontHideAfterAction: true,
+	});
+}
 
 flow.run();
