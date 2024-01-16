@@ -25,6 +25,7 @@
     "start:firefox": "web-ext run --source-dir ./extension --target=firefox-desktop",
     "clear": "rimraf --glob extension/dist extension/manifest.json extension.*",
     "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
     "test": "vitest test",
     "test:e2e": "playwright test",
     "postinstall": "simple-git-hooks",
