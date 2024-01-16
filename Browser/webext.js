@@ -7,6 +7,6 @@ module.exports = {
   },
   run: {
     chromiumBinary:
-      "C:\\Users\\lucie\\scoop\\apps\\opera\\current\\launcher.exe",
+      'C:\\Users\\lucie\\scoop\\apps\\opera\\current\\launcher.exe',
   },
-};
+}
