@@ -3,6 +3,7 @@ import { onMessage } from 'webext-bridge/content-script'
 import { createApp } from 'vue'
 import App from './views/App.vue'
 import { setupApp } from '~/logic/common-setup'
+import { getSite } from '~/logic/sites';
 
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
@@ -18,13 +19,39 @@ import { setupApp } from '~/logic/common-setup'
   container.id = __NAME__
   const root = document.createElement('div')
   const styleEl = document.createElement('link')
-  const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container
+  const shadowDOM
+    = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' })
+    || container
   styleEl.setAttribute('rel', 'stylesheet')
-  styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/style.css'))
+  styleEl.setAttribute(
+    'href',
+    browser.runtime.getURL('dist/contentScripts/style.css'),
+  )
   shadowDOM.appendChild(styleEl)
   shadowDOM.appendChild(root)
   document.body.appendChild(container)
   const app = createApp(App)
   setupApp(app)
   app.mount(root)
+})();
+
+(async () => {
+  const url = window.location.href
+  console.log('url', url)
+
+  const site = await getSite(url)
+
+  console.log('move')
+  console.log(site)
+
+  if (site) {
+    if (site.block) {
+      // naviate to blank page
+      window.location.href = 'about:blank'
+    }
+    else if (site.monochrome) {
+      // make page monochrome
+      document.body.style.filter = 'grayscale(100%)'
+    }
+  }
 })()
