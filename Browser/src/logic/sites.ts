@@ -5,17 +5,21 @@ async function getSites(): Promise<Site[]> {
 
 async function setSites(sites: Site[]) {
   await browser.storage.local.set({ sites })
+  reloadCurrentTab()
 }
 
 async function getSite(url: string) {
   const sites = await getSites()
-  return sites.find(site => site.url === url)
+  const index = sites.findIndex(site => site.url === url)
+  if (index === -1)
+    return makeSite(url)
+  else return sites[index]
 }
 
 async function addSite(site: Site) {
   const sites = await getSites()
   sites.push(site)
-  await browser.storage.local.set({ sites })
+  await setSites(sites)
 }
 
 async function updateSite(site: Site) {
@@ -26,8 +30,14 @@ async function updateSite(site: Site) {
   }
   else {
     sites[index] = site
-    await browser.storage.local.set({ sites })
+    await setSites(sites)
   }
+}
+
+function reloadCurrentTab() {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+    browser.tabs.reload(tabs[0].id)
+  })
 }
 
 function makeSite(url: string): Site {

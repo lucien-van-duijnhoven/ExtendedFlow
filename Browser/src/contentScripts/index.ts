@@ -36,14 +36,14 @@ import { getSite } from '~/logic/sites';
 })();
 
 (async () => {
+  console.group('Content Script')
   const url = window.location.href
   console.log('url', url)
 
   const site = await getSite(url)
 
-  console.log('move')
-  console.log(site)
-
+  console.log('On Site load', site)
+  console.groupEnd()
   if (site) {
     if (site.block) {
       // naviate to blank page

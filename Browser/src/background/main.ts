@@ -1,5 +1,6 @@
 import { onMessage, sendMessage } from 'webext-bridge/background'
 import type { Tabs } from 'webextension-polyfill'
+import { getSite, updateSite } from '~/logic/sites'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -72,3 +73,41 @@ browser.storage.local.set({
     },
   ],
 })
+
+const ws = new WebSocket('ws://localhost:4000')
+ws.onopen = () => {
+  console.log('connected')
+  ws.send('something')
+}
+ws.onmessage = async (e) => {
+  const message = e.data as 'grayscale' | 'block'
+  console.log(message)
+
+  // get current selcted tab
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true })
+  const tab = tabs[0]
+  const url = tab.url
+  if (url === undefined)
+    return
+
+  const currentSite = await getSite(url)
+
+  if (message === 'grayscale') {
+    updateSite({
+      ...currentSite,
+      monochrome: !currentSite.monochrome,
+    })
+  }
+  if (message === 'block') {
+    updateSite({
+      ...currentSite,
+      block: !currentSite.block,
+    })
+  }
+}
+ws.onerror = (e) => {
+  console.error(e)
+}
+ws.onclose = (e) => {
+  console.log(e.code, e.reason)
+}
