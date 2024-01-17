@@ -16,15 +16,19 @@ type Item = {
 };
 
 app.get("/grayscale", (req, res) => {
+  console.log("grayscale request");
   sockets.forEach((socket) => {
     socket.send("grayscale");
   });
+  res.status(200).send("OK");
 });
 
 app.get("/block", (req, res) => {
+  console.log("block request");
   sockets.forEach((socket) => {
     socket.send("block");
   });
+  res.status(200).send("OK");
 });
 
 function startServer(app: Express, port: number) {
@@ -51,6 +55,11 @@ wss.on("connection", function connection(ws) {
 
   ws.on("message", function message(data) {
     console.log("received: %s", data);
+  });
+
+  // log send data
+  ws.on("send", function send(data) {
+    console.log("send: %s", data);
   });
 
   // remove socket from array on close
