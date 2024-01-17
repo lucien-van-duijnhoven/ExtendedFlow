@@ -1,0 +1,12 @@
+{
+    "ID": "CD72054A43D14ED6AC49AEA9EC0C199D",
+    "ActionKeyword": "ef",
+    "Name": "ExtendedFlow",
+    "Description": "Controll the browser with the flow launcher",
+    "Author": "lucien-van-duijnhoven",
+    "Version": "1.0.0",
+    "Language": "csharp",
+    "Website": "https://github.com/lucien-van-duijnhoven/Flow.Launcher.Plugin.ExtendedFlow",
+    "IcoPath": "icon.png",
+    "ExecuteFileName": "Flow.Launcher.Plugin.ExtendedFlow.dll"
+}
